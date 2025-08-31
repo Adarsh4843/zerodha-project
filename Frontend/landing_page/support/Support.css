@@ -1,0 +1,24 @@
+#supportHero {
+  background-color: rgb(56, 126, 209);
+}
+
+#supportWrapped {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 160px;
+  color: white;
+
+}
+
+#supportWrapped a {
+  color: white;
+}
+
+#supportItemLeft{
+    color: white;
+    margin-left: 170px;
+}
+ 
+#supportHero a{
+    color: white;
+}
