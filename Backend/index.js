@@ -115,3 +115,18 @@ app.post("/login", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+
+const path = require("path");
+
+// Serve Frontend
+app.use(express.static(path.join(__dirname, "../Frontend/build")));
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "../Frontend/build", "index.html"));
+});
+
+// Serve Dashboard (under /dashboard path)
+app.use("/dashboard", express.static(path.join(__dirname, "../Dashboard/build")));
+app.get("/dashboard/*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../Dashboard/build", "index.html"));
+});
