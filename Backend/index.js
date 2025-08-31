@@ -120,13 +120,14 @@ app.post("/login", async (req, res) => {
 const path = require("path");
 
 // Serve Frontend
-app.use(express.static(path.join(__dirname, "../Frontend/build")));
+app.use(express.static(path.join(__dirname, "../Frontend/dist")));
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "../Frontend/build", "index.html"));
+  res.sendFile(path.join(__dirname, "../Frontend/dist", "index.html"));
 });
 
 // Serve Dashboard (under /dashboard path)
-app.use("/dashboard", express.static(path.join(__dirname, "../Dashboard/build")));
+app.use("/dashboard", express.static(path.join(__dirname, "../Dashboard/dist")));
 app.get("/dashboard/*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../Dashboard/build", "index.html"));
+  res.sendFile(path.join(__dirname, "../Dashboard/dist", "index.html"));
 });
+
