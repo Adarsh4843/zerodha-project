@@ -17,18 +17,21 @@ const PORT = process.env.PORT || 3002;
 
 // -------- Middleware --------
 const allowedOrigins = [
-  process.env.CLIENT_URL,
-  process.env.DASHBOARD_URL,
+  process.env.CLIENT_URL || "http://localhost:5173",
+  process.env.DASHBOARD_URL || "http://localhost:5174",
+  "https://zerodha-project-8.onrender.com" // backend itself
 ];
 
 app.use(cors({
-  origin: function(origin, callback) {
+  origin: function (origin, callback) {
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
+      console.log("❌ CORS blocked:", origin);
       callback(new Error("Not allowed by CORS"));
     }
-  }
+  },
+  credentials: true,
 }));
 app.use(bodyparser.json());
 app.use(express.json());
