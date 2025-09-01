@@ -2,9 +2,13 @@
 node_modules/
 npm-debug.log
 
-# Build output
+# Build output (ignore all dist by default)
 dist/
 build/
+
+# BUT keep React builds for deployment
+!Frontend/dist
+!Dashboard/dist
 
 # Environment variables
 .env
