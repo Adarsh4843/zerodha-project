@@ -2,7 +2,8 @@ import { useState } from "react";
 import axios from "axios";
 
 const API_URL = import.meta.env.VITE_API_URL;
-const DASHBOARD_URL = import.meta.env.VITE_DASHBOARD_URL;
+const DASHBOARD_URL = import.meta.env.VITE_DASHBOARD_URL || "/dashboard"; // fallback
+
 
 function SignUp() {
   const [name, setName] = useState("");
@@ -20,8 +21,16 @@ function SignUp() {
         password,
       });
 
-      if (res.status === 200 || res.status === 201) {
-        window.location.href = DASHBOARD_URL;
+       if (res.status === 201) {
+        // Optional: show success message
+        setMessage(res.data.message || "Signup successful!");
+        
+        // Redirect to dashboard after 1 second
+        setTimeout(() => {
+          window.location.href = DASHBOARD_URL;
+        }, 1000);
+      } else {
+        setMessage(res.data.error || "Signup failed!");
       }
     } catch (err) {
       console.error(err);
