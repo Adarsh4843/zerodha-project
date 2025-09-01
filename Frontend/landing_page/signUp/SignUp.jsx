@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = import.meta.env.VITE_API_URL || "https://zerodha-project-8.onrender.com";
 const DASHBOARD_URL = import.meta.env.VITE_DASHBOARD_URL || "/dashboard"; // fallback
 
 
@@ -15,7 +15,7 @@ function SignUp() {
     e.preventDefault();
 
     try {
-      const res = await axios.post(`${import.meta.env.VITE_API_URL}/signup`, {
+      const res = await axios.post(`${API_URL}/signup`, {
         name,
         email,
         password,
