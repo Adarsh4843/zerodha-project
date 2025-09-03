@@ -2,7 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 
 const API_URL = "https://zerodha-project-8.onrender.com"; // hardcoded backend
-const DASHBOARD_URL = "/dashboard"; // hardcoded dashboard path
+const DASHBOARD_URL = `${API_URL}/dashboard`;
 
 
 function SignUp() {
@@ -15,16 +15,16 @@ function SignUp() {
     e.preventDefault();
 
     try {
-      const res = await axios.post(`/signup`, {
+      const res = await axios.post(`${API_URL}/signup`, {
         name,
         email,
         password,
       });
 
-       if (res.status === 201) {
+      if (res.status === 201) {
         // Optional: show success message
         setMessage(res.data.message || "Signup successful!");
-        
+
         // Redirect to dashboard after 1 second
         setTimeout(() => {
           window.location.href = DASHBOARD_URL;
