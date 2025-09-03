@@ -1,8 +1,9 @@
 import { useState } from "react";
 import axios from "axios";
 
-const API_URL = "https://zerodha-project-8.onrender.com"; // hardcoded backend
-const DASHBOARD_URL = `${API_URL}/dashboard`;
+const API_URL = import.meta.env.VITE_API_URL;       // backend
+const DASHBOARD_URL = import.meta.env.VITE_DASHBOARD_URL; // dashboard
+
 
 
 function SignUp() {
