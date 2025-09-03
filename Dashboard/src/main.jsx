@@ -12,7 +12,7 @@ export { API_URL }; // export so components can import it
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <BrowserRouter>
+   <BrowserRouter basename="/dashboard">
       <Routes>
         <Route path="/*" element={<Home />} />
       </Routes>
