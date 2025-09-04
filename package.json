@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build": "cd Frontend && npm install && npm run build && cd ../Dashboard && npm install && npm run build",
-    "start": "cd Backend && npm install && node server.js"
+    "install-all": "npm install --prefix Frontend && npm install --prefix Dashboard && npm install --prefix Backend",
+    "build": "npm run build --prefix Frontend && npm run build --prefix Dashboard",
+    "start": "npm run start --prefix Backend"
   }
 }
