@@ -17,10 +17,11 @@ const PORT = process.env.PORT || 3002;
 
 // -------- Middleware --------
 const allowedOrigins = [
-  process.env.CLIENT_URL || "http://localhost:5173",
-  process.env.DASHBOARD_URL || "http://localhost:5174",
-  "https://zerodha-project-8.onrender.com" // backend itself
+  "http://localhost:5173", // local frontend
+  "http://localhost:5174", // local dashboard
+  "https://zerodha-project-tryal1.onrender.com", // your deployed frontend+dashboard
 ];
+
 
 app.use(cors({
   origin: function (origin, callback) {
