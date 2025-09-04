@@ -2,7 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const bodyparser = require("body-parser");
+const bodyParser = require("body-parser");
 const path = require("path");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -19,55 +19,33 @@ const PORT = process.env.PORT || 3002;
 const allowedOrigins = [
   "http://localhost:5173", // local frontend
   "http://localhost:5174", // local dashboard
-  "https://zerodha-project-tryal1.onrender.com", // your deployed frontend+dashboard
+  "https://zerodha-project-tryal1.onrender.com", // deployed frontend/dashboard
 ];
 
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        console.log("❌ CORS blocked:", origin);
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+  })
+);
 
-app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      console.log("❌ CORS blocked:", origin);
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-  credentials: true,
-}));
-app.use(bodyparser.json());
+app.use(bodyParser.json());
 app.use(express.json());
 
 // -------- DB Connection --------
-mongoose.connect(process.env.MONGO_URL)
+mongoose
+  .connect(process.env.MONGO_URL)
   .then(() => console.log("✅ DB Connected"))
-  .catch(err => console.error("❌ DB connection error", err));
+  .catch((err) => console.error("❌ DB connection error", err));
 
-// -------- Routes --------
-
-// All Holdings
-app.get("/allHoldings", async (req, res) => {
-  const holdings = await HoldingsModel.find({});
-  res.json(holdings);
-});
-
-// All Positions
-app.get("/allPositions", async (req, res) => {
-  const positions = await PositionsModel.find({});
-  res.json(positions);
-});
-
-// New Order
-app.post("/neworder", async (req, res) => {
-  try {
-    const order = new OrdersModel(req.body);
-    await order.save();
-    res.send("✅ Order saved");
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// Signup
+// -------- API Routes --------
 app.post("/signup", async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -80,11 +58,11 @@ app.post("/signup", async (req, res) => {
 
     res.status(201).json({ message: "✅ User registered" });
   } catch (err) {
+    console.error("Signup error:", err);
     res.status(500).json({ error: err.message });
   }
 });
 
-// Login
 app.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -106,19 +84,46 @@ app.post("/login", async (req, res) => {
       user: { id: user._id, name: user.name, email: user.email, role: user.role },
     });
   } catch (err) {
+    console.error("Login error:", err);
     res.status(500).json({ error: err.message });
   }
 });
 
-// -------- Serve Frontend & Dashboard --------
-app.use(express.static(path.join(__dirname, "../Frontend/dist")));
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "../Frontend/dist/index.html"));
+// Other API routes
+app.get("/allHoldings", async (req, res) => {
+  const holdings = await HoldingsModel.find({});
+  res.json(holdings);
 });
 
-app.use("/dashboard", express.static(path.join(__dirname, "../Dashboard/dist")));
+app.get("/allPositions", async (req, res) => {
+  const positions = await PositionsModel.find({});
+  res.json(positions);
+});
+
+app.post("/neworder", async (req, res) => {
+  try {
+    const order = new OrdersModel(req.body);
+    await order.save();
+    res.send("✅ Order saved");
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// -------- Serve Static Files --------
+// Serve Dashboard at /dashboard
+app.use(
+  "/dashboard",
+  express.static(path.join(__dirname, "../Dashboard/dist"))
+);
 app.get("/dashboard/*", (req, res) => {
   res.sendFile(path.join(__dirname, "../Dashboard/dist/index.html"));
+});
+
+// Serve Frontend at /
+app.use(express.static(path.join(__dirname, "../Frontend/dist")));
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../Frontend/dist/index.html"));
 });
 
 // -------- Start Server --------
