@@ -19,12 +19,17 @@ function SignUp() {
 
   const handleSubmit = (e) => {
   e.preventDefault();
-  // Optional: show a message before redirect
+  // Optional: show a message
   // setMessage("Redirecting...");
 
-  // Redirect immediately
+  if (!DASHBOARD_URL) {
+    console.error("DASHBOARD_URL is not defined!");
+    return;
+  }
+
   window.location.href = DASHBOARD_URL;
 };
+
 
 
 
