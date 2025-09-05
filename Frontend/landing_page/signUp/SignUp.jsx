@@ -27,7 +27,7 @@ function SignUp() {
     return;
   }
 
-  window.location.href = DASHBOARD_URL;
+  window.location.href =API_URL/"dashboard";
 };
 
 
