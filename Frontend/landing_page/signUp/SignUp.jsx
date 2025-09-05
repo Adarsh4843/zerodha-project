@@ -5,6 +5,10 @@ const API_URL = import.meta.env.VITE_API_URL; // Deployed backend
 const DASHBOARD_URL = import.meta.env.VITE_DASHBOARD_URL; // Deployed dashboard
 
 function SignUp() {
+
+    console.log("API_URL:", API_URL);
+  console.log("DASHBOARD_URL:", DASHBOARD_URL);
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -29,7 +33,7 @@ function SignUp() {
         { headers: { "Content-Type": "application/json" } }
       );
 
-      if (res.status === 201) {
+      if (res.status) {
         setMessage(res.data.message || "✅ Signup successful!");
         // Redirect to dashboard after short delay
         setTimeout(() => {
