@@ -33,7 +33,7 @@ function SignUp() {
         { headers: { "Content-Type": "application/json" } }
       );
 
-      if (res.status) {
+      if (res.status === 201) {
         setMessage(res.data.message || "✅ Signup successful!");
         // Redirect to dashboard after short delay
         setTimeout(() => {
