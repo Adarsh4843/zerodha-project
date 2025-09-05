@@ -15,64 +15,44 @@ function SignUp() {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setMessage("");
+    setLoading(true);
 
+    if (!name || !email || !password) {
+      setMessage("⚠️ All fields are required!");
+      setLoading(false);
+      return;
+    }
 
-  const handleSubmit = (e) => {
-  e.preventDefault();
-  // Optional: show a message
-  // setMessage("Redirecting...");
+    try {
+      const res = await axios.post(
+        `${API_URL}/signup`,
+        { name, email, password },
+        { headers: { "Content-Type": "application/json" } }
+      );
 
-  if (!DASHBOARD_URL) {
-    console.error("DASHBOARD_URL is not defined!");
-    return;
-  }
-
-  window.location.href =API_URL/"dashboard";
-};
-
-
-
-
-
-
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   setMessage("");
-  //   setLoading(true);
-
-  //   if (!name || !email || !password) {
-  //     setMessage("⚠️ All fields are required!");
-  //     setLoading(false);
-  //     return;
-  //   }
-
-  //   try {
-  //     const res = await axios.post(
-  //       `${API_URL}/signup`,
-  //       { name, email, password },
-  //       { headers: { "Content-Type": "application/json" } }
-  //     );
-
-  //     if (res.status) {
-  //       setMessage(res.data.message || "✅ Signup successful!");
-  //       // Redirect to dashboard after short delay
-  //       setTimeout(() => {
-  //         window.location.href = DASHBOARD_URL;
-  //       }, 1000);
-  //     } else {
-  //       setMessage(res.data.error || "❌ Signup failed!");
-  //     }
-  //   } catch (err) {
-  //     console.error("Signup error:", err);
-  //     if (err.response && err.response.data && err.response.data.error) {
-  //       setMessage(`❌ ${err.response.data.error}`);
-  //     } else {
-  //       setMessage("❌ Signup failed. Check your connection.");
-  //     }
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
+      if (res.status) {
+        setMessage(res.data.message || "✅ Signup successful!");
+        // Redirect to dashboard after short delay
+        setTimeout(() => {
+          window.location.href = DASHBOARD_URL;
+        }, 1000);
+      } else {
+        setMessage(res.data.error || "❌ Signup failed!");
+      }
+    } catch (err) {
+      console.error("Signup error:", err);
+      if (err.response && err.response.data && err.response.data.error) {
+        setMessage(`❌ ${err.response.data.error}`);
+      } else {
+        setMessage("❌ Signup failed. Check your connection.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="container">
