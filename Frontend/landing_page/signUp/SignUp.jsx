@@ -5,8 +5,7 @@ const API_URL = import.meta.env.VITE_API_URL; // Deployed backend
 const DASHBOARD_URL = import.meta.env.VITE_DASHBOARD_URL; // Deployed dashboard
 
 function SignUp() {
-
-    console.log("API_URL:", API_URL);
+  console.log("API_URL:", API_URL);
   console.log("DASHBOARD_URL:", DASHBOARD_URL);
 
   const [name, setName] = useState("");
@@ -16,7 +15,7 @@ function SignUp() {
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // stop default form reload
     setMessage("");
     setLoading(true);
 
@@ -35,16 +34,20 @@ function SignUp() {
 
       if (res.status === 200 || res.status === 201) {
         setMessage(res.data.message || "✅ Signup successful!");
-        // Redirect to dashboard after short delay
+        // Redirect after 1 sec
         setTimeout(() => {
-          window.location.href = DASHBOARD_URL;
+          if (!DASHBOARD_URL) {
+            console.error("❌ DASHBOARD_URL is undefined!");
+            return;
+          }
+          window.location.assign(DASHBOARD_URL);
         }, 1000);
       } else {
         setMessage(res.data.error || "❌ Signup failed!");
       }
     } catch (err) {
       console.error("Signup error:", err);
-      if (err.response && err.response.data && err.response.data.error) {
+      if (err.response?.data?.error) {
         setMessage(`❌ ${err.response.data.error}`);
       } else {
         setMessage("❌ Signup failed. Check your connection.");
@@ -60,51 +63,53 @@ function SignUp() {
         <h3>Sign Up</h3>
         <p className="text-muted">Create your account or track your application</p>
 
-        {/* Name */}
-        <div className="input-group mb-3 mt-3" style={{ width: "30%", margin: "0 auto" }}>
-          <span className="input-group-text">Name</span>
-          <input
-            type="text"
-            className="form-control"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Enter your name"
-          />
-        </div>
+        <form onSubmit={handleSubmit}>
+          {/* Name */}
+          <div className="input-group mb-3 mt-3" style={{ width: "30%", margin: "0 auto" }}>
+            <span className="input-group-text">Name</span>
+            <input
+              type="text"
+              className="form-control"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Enter your name"
+            />
+          </div>
 
-        {/* Email */}
-        <div className="input-group mb-3" style={{ width: "30%", margin: "0 auto" }}>
-          <span className="input-group-text">Email</span>
-          <input
-            type="email"
-            className="form-control"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Enter your email"
-          />
-        </div>
+          {/* Email */}
+          <div className="input-group mb-3" style={{ width: "30%", margin: "0 auto" }}>
+            <span className="input-group-text">Email</span>
+            <input
+              type="email"
+              className="form-control"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter your email"
+            />
+          </div>
 
-        {/* Password */}
-        <div className="input-group mb-3" style={{ width: "30%", margin: "0 auto" }}>
-          <span className="input-group-text">Password</span>
-          <input
-            type="password"
-            className="form-control"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Enter password"
-          />
-        </div>
+          {/* Password */}
+          <div className="input-group mb-3" style={{ width: "30%", margin: "0 auto" }}>
+            <span className="input-group-text">Password</span>
+            <input
+              type="password"
+              className="form-control"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Enter password"
+            />
+          </div>
 
-        {/* Submit button */}
-        <button
-          onClick={handleSubmit}
-          className="btn btn-primary fs-5 mt-3"
-          style={{ width: "20%", margin: "0 auto" }}
-          disabled={loading}
-        >
-          {loading ? "Signing Up..." : "Sign Up"}
-        </button>
+          {/* Submit button */}
+          <button
+            type="submit"
+            className="btn btn-primary fs-5 mt-3"
+            style={{ width: "20%", margin: "0 auto" }}
+            disabled={loading}
+          >
+            {loading ? "Signing Up..." : "Sign Up"}
+          </button>
+        </form>
 
         {/* Message */}
         {message && <p className="mt-3 text-center">{message}</p>}
